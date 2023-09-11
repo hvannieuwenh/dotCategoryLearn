@@ -62,8 +62,6 @@ var stimuli_blocks = [];
 var idx_cat_1_excluded = [];
 var idx_cat_2_excluded = [];
 
-stimuli_blocks.push(stim_block_1);
-
 for (i of range(0, N_blocks)){
     const idx_cat_1 = jsPsych.randomization.sampleWithoutReplacement(range(1, N_exemplars), 2**i);
     const idx_cat_2 = jsPsych.randomization.sampleWithoutReplacement(range(1, N_exemplars), 2**i);
@@ -73,7 +71,6 @@ for (i of range(0, N_blocks)){
 }
 
 //const diff = A.filter(x => !B.includes(x));
-
 
 const stimuli = stimuli_blocks[0]
 
