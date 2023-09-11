@@ -1,10 +1,10 @@
 function wrap_choices_in_html(stimuli){
     txt = `
     <div>
-        <div style="position: absolute; left: 20vw; top: 30vh;">
-            <img src=${stimuli[0]} style="width: 20vw"></img>
+        <div style="position: absolute; left: 20vw; top: 38vh;">
+            <img src=${stimuli[0]} style="width: 22vw"></img>
         </div>
-        <div style="position: absolute; right: 20vw; top: 30vh;">
+        <div style="position: absolute; right: 20vw; top: 38vh;">
             <img src=${stimuli[1]} style="width: 20vw"></img>
         </div>
     </div>
