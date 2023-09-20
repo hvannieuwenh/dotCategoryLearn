@@ -1,10 +1,10 @@
 function wrap_choices_in_html(stimuli){
     txt = `
     <div>
-        <div style="position: absolute; left: 20vw; top: 30vh;">
-            <img src=${stimuli[0]} style="width: 20vw"></img>
+        <div style="position: absolute; left: 20vw; top: 38vh;">
+            <img src=${stimuli[0]} style="width: 22vw"></img>
         </div>
-        <div style="position: absolute; right: 20vw; top: 30vh;">
+        <div style="position: absolute; right: 20vw; top: 38vh;">
             <img src=${stimuli[1]} style="width: 20vw"></img>
         </div>
     </div>
@@ -75,6 +75,18 @@ for (i of range(0, N_blocks)){
 const stimuli = stimuli_blocks[0]
 
 var timeline = [];
+
+var welcome = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: "Welcome to the dotCategoryLearn experiment! Press any key to continue."
+};
+timeline.push(welcome)
+
+var instructions = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: "<p>You will be shown a collection of dots. Each set of dots will belong to one of two categories: category A or category B.<br>You will not know in advance which category the given set of dots belongs to.</br></p><p>When you are shown a set of dots, categorize them into category A (left arrow key) or category B (right arrow key)</br>as quickly as possible. You will receive feedback on whether or not your categorization was correct.</p><p>Your goal is to categorize as many sets of dots correctly as possible.</p><p>Press any key to begin.</p>"
+};
+timeline.push(instructions)
 
 var preload = {
     type: jsPsychPreload,
