@@ -1,14 +1,33 @@
 <!DOCTYPE html>
 <html>
-  <style>
-    canvas {
-    padding-left: 0;
-    padding-right: 0;
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
-    width: 800px;
-  }
+  <style> 
+    .stim {
+        width: 24vw;
+    }
+    .left_choice {
+        position: absolute;
+        left: 18vw;
+        top: 28vh;
+        width: 20vw;
+    }
+    .right_choice {
+        position: absolute;
+        right: 18vw;
+        top: 30vh;
+        width: 20vw;
+    }
+    .left_stim {
+        position: absolute;
+        left: 18vw;
+        top: 20vh;
+        width: 24vw;
+    }
+    .right_stim {
+        position: absolute;
+        right: 18vw;
+        top: 20vh;
+        width: 24vw;
+    }
   </style>
   <head>
     <title>My experiment</title>
@@ -19,5 +38,17 @@
     <link href="https://unpkg.com/jspsych@7.3.3/css/jspsych.css" rel="stylesheet" type="text/css" />
     <script src="experiment.js"></script>
   </head>
-  <body></body>
+  <body>
+    <?php
+        // get the data from the POST message
+        $post_data = json_decode(file_get_contents('php://input'), true);
+        $data = $post_data['filedata'];
+        // generate a unique ID for the file, e.g., session-6feu833950202 
+        $file = uniqid("session-");
+        // the directory "data" must be writable by the server
+        $name = "data/{$file}.csv"; 
+        // write the file to disk
+        file_put_contents($name, $data);
+    ?>
+  </body>
 </html>
