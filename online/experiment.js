@@ -70,9 +70,11 @@ var jsPsych = initJsPsych({
 
 var timeline = [];
 
-N_blocks = 2
-N_stim_packs = 2
-N_exemplars = 129
+const time_experiment = 1; // minutes
+const T_exp = time_experiment * 60 * 1000; // ms 
+const N_blocks = 2;
+const N_stim_packs = 2;
+const N_exemplars = 129;
 
 var pack_ID = jsPsych.randomization.sampleWithoutReplacement(range(1, N_stim_packs), 1)[0]
 var stim_path = "../stimuli/" ;
@@ -190,6 +192,9 @@ for (block of range(1, N_blocks)){
             N_corrects = reponses.reduce((acc, x) => acc + x.correct, 0);
             accuracy = N_corrects / reponses.length;
             return (accuracy > 0.8) ? false : true;
+        },
+        conditional_function: function(){
+            return (jsPsych.getTotalTime() <= T_exp) ? true : false ;
         },
         randomize_order : true
     };
