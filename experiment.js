@@ -1,3 +1,8 @@
+// to do: 
+// - Fix bug: The condition to move to next block is only calculated after each stimulus has been presented once, it should be calculated after each trial.
+// 
+
+
 function wrap_choices_debug_in_html(choices, category, exemplar, block){
     txt = `
         <img class="left_choice" src=${choices[0]}></img>
@@ -61,10 +66,13 @@ function saveData(name, data){
     xhr.send(JSON.stringify({filedata: data}));
 }
 
-const DEBUG_MODE = true
+const DEBUG_MODE = false
+
 var jsPsych = initJsPsych({
     on_finish: function() {
-        jsPsych.data.get().localSave('csv','tst.csv');
+        jatos.endStudy(jsPsych.data.get().json());
+        //jatos.endStudy(jsPsych.data.get().json());
+        //jsPsych.data.get().localSave('csv','tst.csv');
     }
 })
 
@@ -72,12 +80,12 @@ var timeline = [];
 
 const time_experiment = 1; // minutes
 const T_exp = time_experiment * 60 * 1000; // ms 
-const N_blocks = 2;
+const N_blocks = 5;
 const N_stim_packs = 2;
 const N_exemplars = 129;
 
 var pack_ID = jsPsych.randomization.sampleWithoutReplacement(range(1, N_stim_packs), 1)[0]
-var stim_path = "../stimuli/" ;
+var stim_path = "stimuli/" ;
 
 const stimuli_cat_1 = exemplar_stimuli(stim_path, pack_ID, 1, N_exemplars);
 const stimuli_cat_2 = exemplar_stimuli(stim_path, pack_ID, 2, N_exemplars);
@@ -100,7 +108,7 @@ timeline.push(welcome)
 
 var instructions = {
   type: jsPsychHtmlKeyboardResponse,
-  stimulus: "<p>You will be shown a collection of dots. Each set of dots will belong to one of two categories: category A or category B.<br>You will not know in advance which category the given set of dots belongs to.</br></p><p>When you are shown a set of dots, categorize them into category A (left arrow key) or category B (right arrow key)</br>as quickly as possible. You will receive feedback on whether or not your categorization was correct.</p><p>Your goal is to categorize as many sets of dots correctly as possible.</p><p>Press any key to begin.</p>",
+  stimulus: "<p>You will be shown a collection of dots. Each set of dots will belong to one of two categories: category A or category B.<br>You will not know in advance which category the given set of dots belongs to.</br></p><p>When you are shown a set of dots, categorize them into category A (left arrow key) or category B (right arrow key)</br>as quickly as possible.</p><p>If your choice was correct, you will see the feedback \"Correct!\"<br>If your choice was incorrect, you will see the dots displayed in the category they actually belong in.</br></p><p>Your goal is to categorize as many sets of dots correctly as possible.</p><p>Press any key to begin.</p>",
   data: {task: 'introduction'}
 };
 timeline.push(instructions)
@@ -168,6 +176,7 @@ var avail_idx_cat_2 = range(1, N_exemplars);
 var N_new_stim_cat_1 = 0;
 var N_new_stim_cat_2 = 0;
 
+// this needs to be fixed, we need to keep track of BOTH the new indices and the 
 for (block of range(1, N_blocks)){
     N_new_stim_cat_1 = (2**(block - 1)) - N_new_stim_cat_1;
     const new_idx_cat_1 = jsPsych.randomization.sampleWithoutReplacement(avail_idx_cat_1, N_new_stim_cat_1);
@@ -188,6 +197,9 @@ for (block of range(1, N_blocks)){
         timeline_variables : block_stimuli,
         loop_function : function(){
             N = 20
+            // filter by both task repsonse and by task: 'blockid' which I will need to define myself
+            // pull var test responses into the loop, and define a new variable that is 'block' (the counter in the loop)
+            // need to check that the length is exactly equal to N (currently 20)
             const reponses = jsPsych.data.get().filter({task: 'response'}).last(N).values();
             N_corrects = reponses.reduce((acc, x) => acc + x.correct, 0);
             accuracy = N_corrects / reponses.length;
@@ -204,4 +216,12 @@ for (block of range(1, N_blocks)){
     prev_stim_cat_2 = stim_cat_2
 }
 
-jsPsych.run(timeline);
+var end_message = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: "The experiment has concluded. Press any key to exit."
+};
+timeline.push(end_message)
+
+jatos.onLoad(() => {
+  jsPsych.run(timeline);
+});
