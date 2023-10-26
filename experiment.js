@@ -22,6 +22,7 @@ function wrap_choices_in_html(choices){
     return txt
 }
 
+// generates HTML string with image element based on the value of the category parameter
 function wrap_wrong_feedback_in_html(stimulus, category){
     txt = (category == 1) ?
         `<img class="left_stim" src=${stimulus}></img>`: 
